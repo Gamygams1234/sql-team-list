@@ -41,7 +41,7 @@ function renderForm($first = '', $last = '', $id = '', $error = '')
 
                 <?php } ?>
 
-                <strong>First Name: *</strong><input type="text" name="firstname" value=<?php echo $first; ?>>
+                <strong>First Name: *</strong><input type="text" name="firstname" value=<?php echo $first; ?>> <br>
                 <strong>Last Name: *</strong><input type="text" name="lastname" value=<?php echo $last; ?>>
                 <p>* is required</p>
                 <input type="submit" name="submit" value="submit">
@@ -58,10 +58,36 @@ function renderForm($first = '', $last = '', $id = '', $error = '')
 }
 
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-
+ // edit 
     renderForm(NULL, NULL, $_GET['id'],NULL);
 } else {
-    renderForm(NULL, NULL, NULL,NULL);
+    // new record
+    if (isset($_POST['submit'])){
+
+        $firstname = htmlentities($_POST['firstname'], ENT_QUOTES);
+        $lastname = htmlentities($_POST['lastname'], ENT_QUOTES);
+
+        if ($firstname =="" || $lastname == ""){
+            $error = "Please fill in everything";
+            renderForm($firstname, $lastname, NULL, $error);
+
+        }else{
+            if($stmt = $conn->prepare("INSERT  players (firstname, lastname) VALUES (?, ?)")){
+                $stmt->bind_param("ss", $firstname, $lastname);
+                $stmt->execute();
+                $stmt->close();
+
+            }else {
+                echo "Could not  prepare";
+            }
+            header("Location: view.php");
+        }
+
+    }else{
+      renderForm();   
+    }
+   
 }
+$conn->close();
 
 ?>
