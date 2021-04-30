@@ -31,8 +31,8 @@
                 echo "<td>" . $row->lastname ."</td>";
                 //  adding the edit and delete links
                 
-                echo "<td><a href='records.php?id=>" . $row->id ."'</a>Edit</td>";
-                echo "<td><a href='delete.php?id=>" . $row->id ."'</a>Delete</td>";
+                echo "<td><a href='records.php?id=" . $row->id . "'</a>Edit</td>";
+                echo "<td><a href='delete.php?id=" . $row->id . "'</a>Delete</td>";
          
                 echo"</tr>";
             }
