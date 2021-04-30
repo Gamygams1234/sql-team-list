@@ -58,8 +58,39 @@ function renderForm($first = '', $last = '', $id = '', $error = '')
 }
 
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+
+    
  // edit 
+
+
+ if (isset($_POST['submit'])){
+
+    $firstname = htmlentities($_POST['firstname'], ENT_QUOTES);
+    $lastname = htmlentities($_POST['lastname'], ENT_QUOTES);
+
+    if ($firstname =="" || $lastname == ""){
+        $error = "Please fill in everything";
+        renderForm($firstname, $lastname, $id, $error);
+
+    }else{
+        if($stmt = $conn->prepare("UPDATE  players  SET firstname = ? , lastname = ? WHERE id = ?")){
+            $stmt->bind_param("ssi", $firstname, $lastname, $_GET['id']);
+            $stmt->execute();
+            $stmt->close();
+
+        }else {
+            echo "Could not  prepare";
+        }
+        header("Location: view.php");
+    }
+
+}else{
     renderForm(NULL, NULL, $_GET['id'],NULL);
+}
+
+    // renderForm(NULL, NULL, $_GET['id'],NULL);
+
+
 } else {
     // new record
     if (isset($_POST['submit'])){
